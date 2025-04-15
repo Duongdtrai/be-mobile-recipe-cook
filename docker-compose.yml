@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    restart: always
+    container_name: app-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+
+volumes:
+  postgres_data:
