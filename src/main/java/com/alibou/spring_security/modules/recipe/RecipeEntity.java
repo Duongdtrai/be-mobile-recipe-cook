@@ -3,6 +3,7 @@ package com.alibou.spring_security.modules.recipe;
 import com.alibou.spring_security.base.entities.BaseEntity;
 import com.alibou.spring_security.modules.category.CategoryEntity;
 import com.alibou.spring_security.modules.comment.CommentEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,15 +29,13 @@ public class RecipeEntity extends BaseEntity {
   @Column(columnDefinition = "TEXT")
   private String description;
 
-  @Column(columnDefinition = "TEXT")
-  private String benefits;
-
   private String image;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
   private CategoryEntity category;
 
-//  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//  private List<CommentEntity> comments = new ArrayList<>();
+  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
+  private List<IngredientEntity> ingredients = new ArrayList<>();
 }

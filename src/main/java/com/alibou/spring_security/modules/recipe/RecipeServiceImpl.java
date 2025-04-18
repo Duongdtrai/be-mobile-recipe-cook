@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,6 +33,17 @@ public class RecipeServiceImpl implements RecipeService{
   @Override
   public RecipeEntity create(RecipeDataDto recipe) {
     RecipeEntity entity = new RecipeEntity();
+    List<IngredientEntity> ingredients = new ArrayList<>();
+    for (IngredientDataDto ingredient : recipe.getIngredients()) {
+      IngredientEntity ingredientEntity = new IngredientEntity();
+      ingredientEntity.setName(ingredient.getName());
+      ingredientEntity.setDescription(ingredient.getDescription());
+      ingredientEntity.setImage(ingredient.getImage());
+      ingredientEntity.setGrams(ingredient.getGrams());
+      ingredientEntity.setCalories(ingredient.getCalories());
+      ingredientEntity.setRecipe(entity);
+      ingredients.add(ingredientEntity);
+    }
     CategoryEntity category = categoryRepository.findById(Long.valueOf(recipe.getCategory_id()))
             .orElseThrow(() -> new RuntimeException("Category not found"));
     entity.setName(recipe.getName());
@@ -39,6 +51,7 @@ public class RecipeServiceImpl implements RecipeService{
     entity.setDescription(recipe.getDescription());
     entity.setImage(recipe.getImage());
     entity.setCategory(category);
+    entity.setIngredients(ingredients);
     return recipeRepository.save(entity);
   }
 
